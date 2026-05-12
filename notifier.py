@@ -83,11 +83,23 @@ def lap_to_ms(t):
 # ── Fetch sTracker ────────────────────────────
 import http.cookiejar
 
+# All cars as comma-separated list for the URL parameter
+ALL_CARS_PARAM = ','.join([
+    '996_2001_track', 'bkr_toyota_gr86_timeattack', 'bmw_m3_e92_team_schirmer_by_freeman',
+    'corvette_z06_track', 'mh_bmw_m3_e46_s2', 'mrkryp_hgk_toyota_supra_tuerk_timeattack',
+    'pib_e36_TA', 'pib_e36_ta', 'project9_nissan_380rs_sundome', 'project9_nissan_gtr_mcr_r34',
+    'rbms_honda_nsx_advance_na2', 'rbms_rx7_20b', 's2000_2003_time_attack', 's281_2000_track',
+    's7r_s2000_r1', 'toy_supra98_track', 'tw_bmw_m4_lenz', 'honda_spoon_fit_gd3',
+    'honda_spoon_fit_gd3_nofsb_sundaecup',
+])
+
 def fetch_page(page):
-    url = f"{STRACKER_BASE}?page={page}"
+    url = (f"{STRACKER_BASE}?track=ks_laguna_seca"
+           f"&cars={ALL_CARS_PARAM}"
+           f"&valid=1,2,0&ranking=mulcarmuldrv&page={page}")
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept': 'text/html,application/xhtml+xml',
     }
     if STRACKER_SESSION:
         headers['Cookie'] = f'session_id={STRACKER_SESSION}'
