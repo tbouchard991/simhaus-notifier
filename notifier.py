@@ -96,7 +96,7 @@ ALL_CARS_PARAM = ','.join([
 def fetch_page(page):
     url = (f"{STRACKER_BASE}?track=ks_laguna_seca"
            f"&cars={ALL_CARS_PARAM}"
-           f"&valid=1,2,0&ranking=mulcarmuldrv&page={page}")
+           f"&valid=1,2,0&date_from=&date_to=&page={page}")
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
         'Accept': 'text/html,application/xhtml+xml',
