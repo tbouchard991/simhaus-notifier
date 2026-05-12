@@ -15,8 +15,7 @@ from datetime import datetime, timezone
 
 # ── Config ────────────────────────────────────
 STRACKER_BASE        = 'https://usa2.assettohosting.com:50640/stracker/lapstat'
-STRACKER_ADMIN_USER  = os.environ.get('STRACKER_USER', 'admin')
-STRACKER_ADMIN_PASS  = os.environ.get('STRACKER_PASS', '')
+STRACKER_SESSION     = os.environ.get('STRACKER_SESSION', '')
 DISCORD_WEBHOOK = os.environ.get('DISCORD_WEBHOOK', '')
 KNOWN_BESTS_FILE = 'known_bests.json'
 RESULTS_FILE     = 'results.json'
@@ -84,49 +83,16 @@ def lap_to_ms(t):
 # ── Fetch sTracker ────────────────────────────
 import http.cookiejar
 
-def get_admin_opener():
-    """Log in as admin and return an opener with session cookie."""
-    jar = http.cookiejar.CookieJar()
-    opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar))
-    
-    # First GET to establish session
-    req = urllib.request.Request(
-        STRACKER_BASE,
-        headers={'User-Agent': 'Mozilla/5.0 SimhausNotifier/1.0'},
-    )
-    opener.open(req, timeout=15)
-    
-    # POST admin login
-    login_data = urllib.parse.urlencode({
-        'username': STRACKER_ADMIN_USER,
-        'password': STRACKER_ADMIN_PASS,
-    }).encode('utf-8')
-    
-    login_req = urllib.request.Request(
-        f"{STRACKER_BASE.replace('/lapstat', '')}/login",
-        data=login_data,
-        headers={
-            'User-Agent': 'Mozilla/5.0 SimhausNotifier/1.0',
-            'Content-Type': 'application/x-www-form-urlencoded',
-        }
-    )
-    try:
-        opener.open(login_req, timeout=15)
-        print("Admin login attempted")
-    except Exception as e:
-        print(f"Admin login failed: {e}")
-    
-    return opener
-
-def fetch_page(page, opener=None):
-    if opener is None:
-        opener = urllib.request.build_opener()
+def fetch_page(page):
     url = f"{STRACKER_BASE}?page={page}"
-    req = urllib.request.Request(
-        url,
-        headers={'User-Agent': 'Mozilla/5.0 SimhausNotifier/1.0'},
-    )
-    with opener.open(req, timeout=15) as r:
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    }
+    if STRACKER_SESSION:
+        headers['Cookie'] = f'session_id={STRACKER_SESSION}'
+    req = urllib.request.Request(url, headers=headers)
+    with urllib.request.urlopen(req, timeout=15) as r:
         return r.read().decode('utf-8', errors='replace')
 
 import urllib.parse
@@ -162,15 +128,10 @@ def parse_laps(html):
     return laps
 
 def fetch_all_laps():
-    """Fetch all laps using admin session to bypass car filter."""
     seen, unique = set(), []
-    
-    opener = get_admin_opener()
-    
-    # Fetch page 0 and page 1
     for page in [0, 1]:
         try:
-            html = fetch_page(page, opener)
+            html = fetch_page(page)
             laps = parse_laps(html)
             print(f"Page {page}: {len(laps)} laps")
             for l in laps:
@@ -180,14 +141,12 @@ def fetch_all_laps():
         except Exception as e:
             print(f"Failed page {page}: {e}")
     
-    # Sort by lap time and recalculate positions
     unique.sort(key=lambda l: lap_to_ms(l['lap']))
     if unique:
         p1_ms = lap_to_ms(unique[0]['lap'])
         for i, l in enumerate(unique):
             l['pos'] = str(i + 1)
             l['gap'] = '+00.000' if i == 0 else f"+{(lap_to_ms(l['lap'])-p1_ms)/1000:06.3f}"
-    
     print(f"Total unique laps: {len(unique)}")
     return unique
 
