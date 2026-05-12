@@ -1,47 +1,31 @@
 """
 Simhaus Time Attack — Discord Notifier + Data Proxy
 Runs via GitHub Actions every 5 minutes.
-- Saves results.json for the leaderboard to fetch
-- Saves known_bests.json for PB tracking
-- Posts to Discord on new PBs, P1 changes, class leader changes, rival alerts
 """
 
-import json
-import os
-import re
-import urllib.request
-import urllib.error
+import json, os, re, urllib.request, urllib.error, urllib.parse, http.cookiejar
 from datetime import datetime, timezone
 
 # ── Config ────────────────────────────────────
-STRACKER_BASE        = 'https://usa2.assettohosting.com:50640/stracker/lapstat'
-STRACKER_SESSION     = os.environ.get('STRACKER_SESSION', '')
-DISCORD_WEBHOOK = os.environ.get('DISCORD_WEBHOOK', '')
+STRACKER_BASE    = 'https://usa2.assettohosting.com:50640/stracker/lapstat'
+STRACKER_SESSION = os.environ.get('STRACKER_SESSION', '')
+DISCORD_WEBHOOK  = os.environ.get('DISCORD_WEBHOOK', '')
 KNOWN_BESTS_FILE = 'known_bests.json'
 RESULTS_FILE     = 'results.json'
-RIVAL_GAP_MS     = 200  # 0.2 seconds
 
-# All car IDs — used for filter POST
-ALL_CARS = [
-    'pib_e36_TA',
-    'mrkryp_hgk_toyota_supra_tuerk_timeattack',
-    's2000_2003_time_attack',
-    's7r_s2000_r1',
-    'mh_bmw_m3_e46_s2',
-    'tw_bmw_m4_lenz',
-    'toy_supra98_track',
-    'bkr_toyota_gr86_timeattack',
-    's281_2000_track',
-    'project9_nissan_380rs_sundome',
-    'project9_nissan_gtr_mcr_r34',
-    'rbms_honda_nsx_advance_na2',
-    'rbms_rx7_20b',
-    'corvette_z06_track',
-    '996_2001_track',
-    'honda_spoon_fit_gd3',
+RIVAL_GAP_MS       = 200    # 0.2s — rival alert threshold
+MIN_IMPROVEMENT_MS = 100    # 0.1s — minimum improvement to post PB
+PB_COOLDOWN_MINS   = 10     # minutes between PB posts per driver
+SESSION_IDLE_MINS  = 120    # minutes of inactivity before session summary
+
+ALL_CARS_PARAM = ','.join([
+    '996_2001_track','bkr_toyota_gr86_timeattack','bmw_m3_e92_team_schirmer_by_freeman',
+    'corvette_z06_track','mh_bmw_m3_e46_s2','mrkryp_hgk_toyota_supra_tuerk_timeattack',
+    'pib_e36_TA','pib_e36_ta','project9_nissan_380rs_sundome','project9_nissan_gtr_mcr_r34',
+    'rbms_honda_nsx_advance_na2','rbms_rx7_20b','s2000_2003_time_attack','s281_2000_track',
+    's7r_s2000_r1','toy_supra98_track','tw_bmw_m4_lenz','honda_spoon_fit_gd3',
     'honda_spoon_fit_gd3_nofsb_sundaecup',
-    'bmw_m3_e92_team_schirmer_by_freeman',
-]
+])
 
 CAR_LABELS = {
     'pib_e36_TA':                               'PIB BMW E36 TA',
@@ -64,17 +48,13 @@ CAR_LABELS = {
     'bmw_m3_e92_team_schirmer_by_freeman':      'BMW M3 E92',
 }
 
-
-# Driver display name overrides
 DRIVER_NAMES = {
-    'Bautista Bordes': 'zimmer⁴⁴',
+    'Bautista Bordes': 'zimmer\u2074\u2074',
     'Sauce':           'Hugie',
 }
 
-def driver_name(name):
-    return DRIVER_NAMES.get(name, name)
-def car_label(car_id):
-    return CAR_LABELS.get(car_id, car_id)
+def car_label(c):  return CAR_LABELS.get(c, c)
+def driver_name(n): return DRIVER_NAMES.get(n, n)
 
 # ── Lap time helpers ──────────────────────────
 def norm_lap(t):
@@ -89,19 +69,25 @@ def lap_to_ms(t):
         return float(parts[0]) * 60000 + float(parts[1]) * 1000
     return float(parts[0]) * 1000
 
+def fmt_gap(ms):
+    """Format milliseconds as a clean gap string e.g. +2.312s"""
+    return f"+{ms/1000:.3f}s"
+
+def fmt_improvement(prev_ms, cur_ms):
+    """Format improvement e.g. ▲ 0.423s faster"""
+    diff = prev_ms - cur_ms
+    return f"▲ {diff/1000:.3f}s faster"
+
+def fmt_gap_to_p1(gap_str):
+    """Clean up raw gap string e.g. +02.312 → +2.312s"""
+    if not gap_str or gap_str in ('+', '—', '+00.000'): return 'P1'
+    try:
+        ms = float(gap_str.replace('+','')) * 1000
+        return fmt_gap(ms)
+    except:
+        return gap_str
+
 # ── Fetch sTracker ────────────────────────────
-import http.cookiejar
-
-# All cars as comma-separated list for the URL parameter
-ALL_CARS_PARAM = ','.join([
-    '996_2001_track', 'bkr_toyota_gr86_timeattack', 'bmw_m3_e92_team_schirmer_by_freeman',
-    'corvette_z06_track', 'mh_bmw_m3_e46_s2', 'mrkryp_hgk_toyota_supra_tuerk_timeattack',
-    'pib_e36_TA', 'pib_e36_ta', 'project9_nissan_380rs_sundome', 'project9_nissan_gtr_mcr_r34',
-    'rbms_honda_nsx_advance_na2', 'rbms_rx7_20b', 's2000_2003_time_attack', 's281_2000_track',
-    's7r_s2000_r1', 'toy_supra98_track', 'tw_bmw_m4_lenz', 'honda_spoon_fit_gd3',
-    'honda_spoon_fit_gd3_nofsb_sundaecup',
-])
-
 def fetch_page(page):
     url = (f"{STRACKER_BASE}?track=ks_laguna_seca"
            f"&cars={ALL_CARS_PARAM}"
@@ -116,15 +102,12 @@ def fetch_page(page):
     with urllib.request.urlopen(req, timeout=15) as r:
         return r.read().decode('utf-8', errors='replace')
 
-import urllib.parse
-
 def parse_laps(html):
     laps = []
     row_re  = re.compile(r'href="lapdetails\?lapid=(\d+)#">([\s\S]*?)</tr>')
     td_re   = re.compile(r'<td[^>]*>([\s\S]*?)</td>')
     tag_re  = re.compile(r'<[^>]+>')
     vmax_re = re.compile(r'vmax[^>]*>([\d.]+)')
-
     for m in row_re.finditer(html):
         lapid    = m.group(1)
         row_html = m.group(2)
@@ -161,7 +144,6 @@ def fetch_all_laps():
                     unique.append(l)
         except Exception as e:
             print(f"Failed page {page}: {e}")
-    
     unique.sort(key=lambda l: lap_to_ms(l['lap']))
     if unique:
         p1_ms = lap_to_ms(unique[0]['lap'])
@@ -176,21 +158,28 @@ def load_bests():
     if os.path.exists(KNOWN_BESTS_FILE):
         with open(KNOWN_BESTS_FILE) as f:
             return json.load(f)
-    return {'pb': {}, 'overall_p1': {}, 'class_leaders': {}, 'rivals_posted': {}}
+    return {
+        'pb': {},
+        'pb_posted_at': {},     # driver:car -> ISO timestamp of last PB post
+        'overall_p1': {},
+        'class_leaders': {},
+        'rivals_posted': {},
+        'last_activity': None,  # ISO timestamp of most recent lap date seen
+        'session_summary_posted': None,  # ISO timestamp of last summary post
+    }
 
 def save_bests(data):
     with open(KNOWN_BESTS_FILE, 'w') as f:
         json.dump(data, f, indent=2)
 
 def save_results(laps):
-    data = {
-        'ok': True,
-        'updated': datetime.now(timezone.utc).isoformat(),
-        'count': len(laps),
-        'laps': laps,
-    }
     with open(RESULTS_FILE, 'w') as f:
-        json.dump(data, f)
+        json.dump({
+            'ok': True,
+            'updated': datetime.now(timezone.utc).isoformat(),
+            'count': len(laps),
+            'laps': laps,
+        }, f)
     print(f"Saved {len(laps)} laps to {RESULTS_FILE}")
 
 # ── Discord ───────────────────────────────────
@@ -200,13 +189,11 @@ def post_discord(embed):
         return
     payload = json.dumps({'embeds': [embed]}).encode('utf-8')
     req = urllib.request.Request(
-        DISCORD_WEBHOOK,
-        data=payload,
+        DISCORD_WEBHOOK, data=payload,
         headers={
             'Content-Type': 'application/json',
             'User-Agent': 'DiscordBot (https://simhaus.com, 1.0)',
-        },
-        method='POST'
+        }, method='POST'
     )
     try:
         with urllib.request.urlopen(req, timeout=10) as r:
@@ -214,44 +201,67 @@ def post_discord(embed):
     except urllib.error.HTTPError as e:
         print(f'Discord error: {e.code} {e.read()}')
 
-def ts():
-    return datetime.now(timezone.utc).isoformat()
+def ts(): return datetime.now(timezone.utc).isoformat()
 
-# ── Check PBs ─────────────────────────────────
+# ── 1. Personal Bests ─────────────────────────
 def check_pbs(laps, bests):
-    pb = bests.setdefault('pb', {})
-    new_pbs = []
+    pb         = bests.setdefault('pb', {})
+    posted_at  = bests.setdefault('pb_posted_at', {})
+    now        = datetime.now(timezone.utc)
+    new_pbs    = []
+
     for l in laps:
         key  = f"{l['driver']}:{l['car']}"
         prev = pb.get(key)
         cur  = l['lap']
+
         if not prev:
             pb[key] = cur
             continue
-        if lap_to_ms(cur) < lap_to_ms(prev):
-            pb[key] = cur
-            new_pbs.append(l)
 
-    for l in new_pbs:
+        improvement_ms = lap_to_ms(prev) - lap_to_ms(cur)
+        if improvement_ms <= 0:
+            continue
+
+        # Must improve by at least MIN_IMPROVEMENT_MS
+        if improvement_ms < MIN_IMPROVEMENT_MS:
+            pb[key] = cur
+            print(f"PB too small ({improvement_ms:.0f}ms): {l['driver']} {cur}")
+            continue
+
+        # Check cooldown — skip if posted within PB_COOLDOWN_MINS
+        last_posted = posted_at.get(key)
+        if last_posted:
+            elapsed = (now - datetime.fromisoformat(last_posted)).total_seconds() / 60
+            if elapsed < PB_COOLDOWN_MINS:
+                pb[key] = cur
+                print(f"PB cooldown ({elapsed:.1f}min): {l['driver']} {cur}")
+                continue
+
+        pb[key] = cur
+        posted_at[key] = now.isoformat()
+        new_pbs.append((l, improvement_ms))
+
+    for l, improvement_ms in new_pbs:
         if l['pos'] == '1': continue
-        gap = l['gap'] if l['gap'] and l['gap'] != '+' else '—'
+        gap_display = fmt_gap_to_p1(l['gap'])
         post_discord({
             'title': '🏎️ New Personal Best',
-            'description': f"**{l['driver']}** just set a new best lap",
+            'description': f"**{l['driver']}** just went faster in the **{car_label(l['car'])}**",
             'color': 0x00d352,
             'fields': [
-                {'name': '⏱️ Lap Time',   'value': f"`{l['lap']}`",   'inline': True},
-                {'name': '🚗 Car',        'value': car_label(l['car']),'inline': True},
-                {'name': '📍 Position',   'value': f"P{l['pos']}",    'inline': True},
-                {'name': '📊 Gap to P1',  'value': gap,               'inline': True},
-                {'name': '🔄 Total Laps', 'value': str(l['laps']),    'inline': True},
+                {'name': '⏱️ Lap Time',    'value': f"`{l['lap']}`",                   'inline': True},
+                {'name': '📍 Position',    'value': f"P{l['pos']}",                    'inline': True},
+                {'name': '📈 Improvement', 'value': fmt_improvement(lap_to_ms(l['lap']) + improvement_ms, lap_to_ms(l['lap'])), 'inline': True},
+                {'name': '📊 Gap to P1',   'value': gap_display,                       'inline': True},
+                {'name': '🔄 Total Laps',  'value': str(l['laps']),                    'inline': True},
             ],
             'footer': {'text': 'Simhaus Time Attack · Laguna Seca'},
             'timestamp': ts(),
         })
-        print(f"PB: {l['driver']} {l['lap']} in {car_label(l['car'])}")
+        print(f"PB: {l['driver']} {l['lap']} (▲{improvement_ms/1000:.3f}s) in {car_label(l['car'])}")
 
-# ── Check Overall P1 ──────────────────────────
+# ── 2. Overall P1 ─────────────────────────────
 def check_overall_p1(laps, bests):
     if not laps: return
     p1   = laps[0]
@@ -263,14 +273,17 @@ def check_overall_p1(laps, bests):
     faster = lap_to_ms(p1['lap']) < lap_to_ms(prev['lap'])
     if not is_new and not faster: return
 
+    improvement = lap_to_ms(prev['lap']) - lap_to_ms(p1['lap'])
     post_discord({
         'title': '🏆 New Overall P1!',
-        'description': f"**{p1['driver']}** has taken the overall lead from **{prev['driver']}**!" if is_new else f"**{p1['driver']}** improved their overall P1!",
+        'description': (f"**{p1['driver']}** has taken the overall lead from **{prev['driver']}**!"
+                        if is_new else
+                        f"**{p1['driver']}** improved their overall P1 by **{improvement/1000:.3f}s**!"),
         'color': 0xFFD700,
         'fields': [
-            {'name': '⏱️ New Lap',   'value': f"`{p1['lap']}`",    'inline': True},
-            {'name': '🚗 Car',       'value': car_label(p1['car']),'inline': True},
-            {'name': '📉 Prev Best', 'value': f"`{prev['lap']}`",  'inline': True},
+            {'name': '⏱️ New Lap',    'value': f"`{p1['lap']}`",                  'inline': True},
+            {'name': '🚗 Car',        'value': car_label(p1['car']),               'inline': True},
+            {'name': '📉 Prev Best',  'value': f"`{prev['lap']}`",                 'inline': True},
         ],
         'footer': {'text': 'Simhaus Time Attack · Laguna Seca'},
         'timestamp': ts(),
@@ -278,7 +291,7 @@ def check_overall_p1(laps, bests):
     print(f"P1: {p1['driver']} {p1['lap']}")
     bests['overall_p1'] = {'driver': p1['driver'], 'lap': p1['lap']}
 
-# ── Check Class Leaders ───────────────────────
+# ── 3. Class Leaders ──────────────────────────
 def check_class_leaders(laps, bests):
     leaders = bests.setdefault('class_leaders', {})
     by_car  = {}
@@ -295,13 +308,17 @@ def check_class_leaders(laps, bests):
         faster = lap_to_ms(fastest['lap']) < lap_to_ms(prev['lap'])
         if not is_new and not faster: continue
 
+        improvement = lap_to_ms(prev['lap']) - lap_to_ms(fastest['lap'])
         post_discord({
-            'title': f"🏅 Class Leader Change — {car_label(car_id)}",
-            'description': f"**{fastest['driver']}** has taken P1 in class from **{prev['driver']}**!" if is_new else f"**{fastest['driver']}** improved their class best!",
+            'title': f"🏅 Class Leader — {car_label(car_id)}",
+            'description': (f"**{fastest['driver']}** has taken P1 in class from **{prev['driver']}**!"
+                            if is_new else
+                            f"**{fastest['driver']}** improved their class best by **{improvement/1000:.3f}s**!"),
             'color': 0x5ab4e8,
             'fields': [
-                {'name': '⏱️ New Lap',   'value': f"`{fastest['lap']}`", 'inline': True},
-                {'name': '📉 Prev Best', 'value': f"`{prev['lap']}`",    'inline': True},
+                {'name': '⏱️ New Lap',   'value': f"`{fastest['lap']}`",           'inline': True},
+                {'name': '📉 Prev Best', 'value': f"`{prev['lap']}`",              'inline': True},
+                {'name': '📈 Delta',     'value': f"▲ {improvement/1000:.3f}s",    'inline': True},
             ],
             'footer': {'text': 'Simhaus Time Attack · Laguna Seca'},
             'timestamp': ts(),
@@ -309,7 +326,7 @@ def check_class_leaders(laps, bests):
         print(f"Class leader: {fastest['driver']} in {car_label(car_id)}")
         leaders[car_id] = {'driver': fastest['driver'], 'lap': fastest['lap']}
 
-# ── Check Rivals ──────────────────────────────
+# ── 4. Rivals ─────────────────────────────────
 def check_rivals(laps, bests):
     posted = bests.setdefault('rivals_posted', {})
     today  = datetime.now(timezone.utc).strftime('%Y-%m-%d')
@@ -326,14 +343,94 @@ def check_rivals(laps, bests):
             'description': f"**{b['driver']}** is only **{gap_ms/1000:.3f}s** behind **{a['driver']}**!",
             'color': 0xff6b00,
             'fields': [
-                {'name': f"🥇 {a['driver']}", 'value': f"`{a['lap']}`",       'inline': True},
-                {'name': f"🥈 {b['driver']}", 'value': f"`{b['lap']}`",       'inline': True},
-                {'name': '📏 Gap',            'value': f"{gap_ms/1000:.3f}s", 'inline': True},
+                {'name': f"🥇 {a['driver']}", 'value': f"`{a['lap']}`",        'inline': True},
+                {'name': f"🥈 {b['driver']}", 'value': f"`{b['lap']}`",        'inline': True},
+                {'name': '📏 Gap',            'value': fmt_gap(gap_ms),        'inline': True},
             ],
             'footer': {'text': 'Simhaus Time Attack · Laguna Seca'},
             'timestamp': ts(),
         })
         print(f"Rival: {b['driver']} vs {a['driver']}")
+
+# ── 5. Session Summary ────────────────────────
+def check_session_summary(laps, bests):
+    """Post a session summary when the server has been idle for SESSION_IDLE_MINS."""
+    if not laps: return
+
+    # Find the most recent lap date in the current data
+    dates = [l['date'] for l in laps if l.get('date')]
+    if not dates: return
+
+    # Parse the most recent lap date
+    try:
+        latest_date_str = max(dates)
+        # sTracker dates are like "2026-05-11 13:47"
+        latest_dt = datetime.strptime(latest_date_str, '%Y-%m-%d %H:%M').replace(tzinfo=timezone.utc)
+    except Exception:
+        return
+
+    now = datetime.now(timezone.utc)
+    idle_mins = (now - latest_dt).total_seconds() / 60
+
+    # Update last known activity
+    prev_activity = bests.get('last_activity')
+    bests['last_activity'] = latest_date_str
+
+    # Only post if:
+    # 1. Server has been idle for SESSION_IDLE_MINS
+    # 2. We haven't already posted a summary for this idle period
+    last_summary = bests.get('session_summary_posted')
+
+    if idle_mins < SESSION_IDLE_MINS:
+        return
+
+    # Check if we already posted a summary after the last activity
+    if last_summary:
+        try:
+            last_summary_dt = datetime.fromisoformat(last_summary)
+            if last_summary_dt > latest_dt:
+                return  # Already posted summary for this session
+        except Exception:
+            pass
+
+    # Build summary
+    by_car = {}
+    for l in laps:
+        if l['car'] not in by_car:
+            by_car[l['car']] = l
+
+    overall    = laps[0]
+    total_laps = sum(int(l['laps']) for l in laps if str(l['laps']).isdigit())
+    drivers    = len(set(l['driver'] for l in laps))
+
+    class_lines = '\n'.join(
+        f"**{car_label(car_id)}** — {e['driver']} `{e['lap']}`"
+        for car_id, e in by_car.items()
+    )
+
+    # Most active driver
+    driver_laps = {}
+    for l in laps:
+        n = int(l['laps']) if str(l['laps']).isdigit() else 0
+        driver_laps[l['driver']] = driver_laps.get(l['driver'], 0) + n
+    most_active = max(driver_laps.items(), key=lambda x: x[1], default=('—', 0))
+
+    post_discord({
+        'title': '📋 Session Summary',
+        'description': f"The server has been quiet for {int(idle_mins)} minutes. Here's how the session wrapped up.",
+        'color': 0x1e90ff,
+        'fields': [
+            {'name': '🏆 Overall Fastest', 'value': f"**{overall['driver']}** `{overall['lap']}` — {car_label(overall['car'])}", 'inline': False},
+            {'name': '🏅 Class Leaders',   'value': class_lines or '—',                                                          'inline': False},
+            {'name': '🔄 Most Active',     'value': f"**{most_active[0]}** — {most_active[1]} laps",                             'inline': True},
+            {'name': '👥 Drivers',         'value': str(drivers),                                                                'inline': True},
+            {'name': '🔢 Total Laps',      'value': str(total_laps),                                                             'inline': True},
+        ],
+        'footer': {'text': 'Simhaus Time Attack · Laguna Seca · simhaus-leaderboard-2a7e2b.gitlab.io'},
+        'timestamp': ts(),
+    })
+    bests['session_summary_posted'] = now.isoformat()
+    print(f"Session summary posted (idle {int(idle_mins)} mins)")
 
 # ── Main ──────────────────────────────────────
 def main():
@@ -350,15 +447,14 @@ def main():
         print("No laps — check sTracker connection")
         return
 
-    # Save results for leaderboard
     save_results(laps)
 
-    # Discord notifications
     bests = load_bests()
     check_pbs(laps, bests)
     check_overall_p1(laps, bests)
     check_class_leaders(laps, bests)
     check_rivals(laps, bests)
+    check_session_summary(laps, bests)
     save_bests(bests)
     print("Done")
 
