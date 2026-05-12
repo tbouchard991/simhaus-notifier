@@ -23,6 +23,7 @@ jobs:
       - name: Run notifier
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          STRACKER_PASS: ${{ secrets.STRACKER_PASS }}
         run: python notifier.py
 
       - name: Save data files
