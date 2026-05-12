@@ -193,7 +193,10 @@ def post_discord(embed):
     req = urllib.request.Request(
         DISCORD_WEBHOOK,
         data=payload,
-        headers={'Content-Type': 'application/json'},
+        headers={
+            'Content-Type': 'application/json',
+            'User-Agent': 'DiscordBot (https://simhaus.com, 1.0)',
+        },
         method='POST'
     )
     try:
