@@ -51,7 +51,7 @@
     "Bautista Bordes:pib_e36_TA": "1:15.175",
     "Eladio:pib_e36_TA": "1:16.607",
     "Bytor:pib_e36_TA": "1:15.585",
-    "Clarke:pib_e36_TA": "1:17.286",
+    "Clarke:pib_e36_TA": "1:17.036",
     "Driver 13:pib_e36_TA": "1:17.385",
     "Sauce:pib_e36_TA": "1:17.428",
     "Garfield:pib_e36_TA": "1:17.487",
@@ -70,7 +70,10 @@
     "Hugie:pib_e36_TA": "1:17.428",
     "Hugie:mrkryp_hgk_toyota_supra_tuerk_timeattack": "1:19.460",
     "zimmer\u2074\u2074:corvette_z06_track": "1:24.675",
-    "Hugie:mh_bmw_m3_e46_s2": "1:31.889"
+    "Hugie:mh_bmw_m3_e46_s2": "1:31.889",
+    "Clarke:s281_2000_track": "1:28.018",
+    "Clarke:996_2001_track": "1:32.895",
+    "m4stersplint3r:s7r_s2000_r1": "1:32.965"
   },
   "overall_p1": {
     "driver": "zimmer\u2074\u2074",
