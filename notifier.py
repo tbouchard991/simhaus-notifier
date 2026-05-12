@@ -64,6 +64,15 @@ CAR_LABELS = {
     'bmw_m3_e92_team_schirmer_by_freeman':      'BMW M3 E92',
 }
 
+
+# Driver display name overrides
+DRIVER_NAMES = {
+    'Bautista Bordes': 'zimmer⁴⁴',
+    'Sauce':           'Hugie',
+}
+
+def driver_name(name):
+    return DRIVER_NAMES.get(name, name)
 def car_label(car_id):
     return CAR_LABELS.get(car_id, car_id)
 
@@ -125,7 +134,7 @@ def parse_laps(html):
         laps.append({
             'lapid':  lapid,
             'pos':    cells[0].replace('.', '').strip(),
-            'driver': cells[1].strip(),
+            'driver': driver_name(cells[1].strip()),
             'car':    cells[2].strip(),
             'lap':    norm_lap(cells[3].strip()),
             'gap':    cells[4].strip(),
