@@ -10,7 +10,7 @@
     "Bytor:mrkryp_hgk_toyota_supra_tuerk_timeattack": "1:19.719",
     "m4stersplint3r:mrkryp_hgk_toyota_supra_tuerk_timeattack": "1:20.198",
     "Garfield:s2000_2003_time_attack": "1:21.287",
-    "Bytor:s2000_2003_time_attack": "1:21.324",
+    "Bytor:s2000_2003_time_attack": "1:21.267",
     "Eladio:s2000_2003_time_attack": "1:21.497",
     "atlinke39:mrkryp_hgk_toyota_supra_tuerk_timeattack": "1:21.621",
     "iAmTheLIQUOR:mrkryp_hgk_toyota_supra_tuerk_timeattack": "1:21.903",
@@ -45,13 +45,31 @@
     "Garfield:bkr_toyota_gr86_timeattack": "1:34.634",
     "PapaTweaks:rbms_rx7_20b": "1:40.323",
     "Synth:996_2001_track": "1:40.941",
-    "Enzyme:s7r_s2000_r1": "1:41.933",
+    "Enzyme:s7r_s2000_r1": "1:41.039",
     "Enzyme:996_2001_track": "1:42.322",
-    "Synth:bkr_toyota_gr86_timeattack": "1:42.966"
+    "Synth:bkr_toyota_gr86_timeattack": "1:42.966",
+    "Bautista Bordes:pib_e36_TA": "1:15.175",
+    "Eladio:pib_e36_TA": "1:16.607",
+    "Bytor:pib_e36_TA": "1:17.285",
+    "Clarke:pib_e36_TA": "1:17.286",
+    "Driver 13:pib_e36_TA": "1:17.385",
+    "Sauce:pib_e36_TA": "1:17.428",
+    "Garfield:pib_e36_TA": "1:17.487",
+    "Kyle Loader:pib_e36_TA": "1:17.693",
+    "iAmTheLIQUOR:pib_e36_TA": "1:19.019",
+    "m4stersplint3r:pib_e36_TA": "1:19.115",
+    "PapaTweaks:project9_nissan_gtr_mcr_r34": "1:40.174",
+    "Eladio:honda_spoon_fit_gd3_nofsb_sundaecup": "1:54.592",
+    "iAmTheLIQUOR:honda_spoon_fit_gd3_nofsb_sundaecup": "1:59.082",
+    "GTendy444:mrkryp_hgk_toyota_supra_tuerk_timeattack": "1:59.139",
+    "Enzyme:pib_e36_TA": "2:32.160",
+    "bavarian_boii:rbms_rx7_20b": "3:03.308",
+    "matthew.87.e30:s2000_2003_time_attack": "3:32.486",
+    "iAmTheLIQUOR:rbms_rx7_20b": "4:01.489"
   },
   "overall_p1": {
-    "driver": "GetboostedVR1",
-    "lap": "1:18.425"
+    "driver": "Bautista Bordes",
+    "lap": "1:15.175"
   },
   "class_leaders": {
     "mrkryp_hgk_toyota_supra_tuerk_timeattack": {
@@ -59,8 +77,8 @@
       "lap": "1:18.425"
     },
     "s2000_2003_time_attack": {
-      "driver": "Garfield",
-      "lap": "1:21.287"
+      "driver": "Bytor",
+      "lap": "1:21.267"
     },
     "corvette_z06_track": {
       "driver": "Bautista Bordes",
@@ -101,6 +119,14 @@
     "bkr_toyota_gr86_timeattack": {
       "driver": "Garfield",
       "lap": "1:34.634"
+    },
+    "pib_e36_TA": {
+      "driver": "Bautista Bordes",
+      "lap": "1:15.175"
+    },
+    "honda_spoon_fit_gd3_nofsb_sundaecup": {
+      "driver": "Eladio",
+      "lap": "1:54.592"
     }
   },
   "rivals_posted": {
@@ -111,6 +137,12 @@
     "Bytor:Eladio:s2000_2003_time_attack": "2026-05-12",
     "Bautista Bordes:GetboostedVR1:corvette_z06_track": "2026-05-12",
     "Don Utz:GTendy444:s2000_2003_time_attack": "2026-05-12",
-    "Garfield:Bytor:rbms_rx7_20b": "2026-05-12"
+    "Garfield:Bytor:rbms_rx7_20b": "2026-05-12",
+    "Bytor:Clarke:pib_e36_TA": "2026-05-12",
+    "Clarke:Driver 13:pib_e36_TA": "2026-05-12",
+    "Driver 13:Sauce:pib_e36_TA": "2026-05-12",
+    "Sauce:Garfield:pib_e36_TA": "2026-05-12",
+    "iAmTheLIQUOR:m4stersplint3r:pib_e36_TA": "2026-05-12",
+    "Bytor:Garfield:s2000_2003_time_attack": "2026-05-12"
   }
 }
