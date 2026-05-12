@@ -378,20 +378,15 @@ def check_session_summary(laps, bests):
 
     # Only post if:
     # 1. Server has been idle for SESSION_IDLE_MINS
-    # 2. We haven't already posted a summary for this idle period
+    # 2. We haven't already posted a summary today
     last_summary = bests.get('session_summary_posted')
+    today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
 
     if idle_mins < SESSION_IDLE_MINS:
         return
 
-    # Check if we already posted a summary after the last activity
-    if last_summary:
-        try:
-            last_summary_dt = datetime.fromisoformat(last_summary)
-            if last_summary_dt > latest_dt:
-                return  # Already posted summary for this session
-        except Exception:
-            pass
+    if last_summary and last_summary[:10] == today:
+        return  # Already posted a summary today
 
     # Build summary
     by_car = {}
