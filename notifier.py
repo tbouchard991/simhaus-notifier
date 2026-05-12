@@ -81,18 +81,10 @@ def lap_to_ms(t):
 
 # ── Fetch sTracker ────────────────────────────
 def fetch_page(page):
-    # Build POST body with all cars to bypass session filter
-    params = '&'.join(f'cars={urllib.parse.quote(c)}' for c in ALL_CARS)
-    params += f'&track=ks_laguna_seca&ranking=mulcarmuldrv&valid=valid%2Cunknown%2Cinvalid&page={page}'
-    
+    url = f"{STRACKER_BASE}?page={page}"
     req = urllib.request.Request(
-        STRACKER_BASE,
-        data=params.encode('utf-8'),
-        headers={
-            'User-Agent': 'SimhausNotifier/1.0',
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        method='POST'
+        url,
+        headers={'User-Agent': 'SimhausNotifier/1.0'},
     )
     with urllib.request.urlopen(req, timeout=15) as r:
         return r.read().decode('utf-8', errors='replace')
