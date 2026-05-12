@@ -73,7 +73,8 @@
     "Hugie:mh_bmw_m3_e46_s2": "1:31.889",
     "Clarke:s281_2000_track": "1:28.018",
     "Clarke:996_2001_track": "1:32.895",
-    "m4stersplint3r:s7r_s2000_r1": "1:32.965"
+    "m4stersplint3r:s7r_s2000_r1": "1:32.965",
+    "Driver 13:corvette_z06_track": "1:25.012"
   },
   "overall_p1": {
     "driver": "zimmer\u2074\u2074",
@@ -160,5 +161,8 @@
     "Garfield:Driver 13:pib_e36_TA": "2026-05-12",
     "Driver 13:Bytor:mrkryp_hgk_toyota_supra_tuerk_timeattack": "2026-05-12",
     "Bytor:Clarke:mrkryp_hgk_toyota_supra_tuerk_timeattack": "2026-05-12"
-  }
+  },
+  "pb_posted_at": {},
+  "last_activity": "2026-05-12 16:05",
+  "session_summary_posted": "2026-05-12T23:40:58.605140+00:00"
 }
