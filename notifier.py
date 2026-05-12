@@ -80,13 +80,30 @@ def lap_to_ms(t):
     return float(parts[0]) * 1000
 
 # ── Fetch sTracker ────────────────────────────
-def fetch_page(page):
+import http.cookiejar
+
+def get_session_with_all_cars():
+    """Get a session cookie with all cars selected by using the admin interface."""
+    jar = http.cookiejar.CookieJar()
+    opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar))
+    
+    # First fetch the page to get initial session
+    req = urllib.request.Request(
+        STRACKER_BASE,
+        headers={'User-Agent': 'Mozilla/5.0 SimhausNotifier/1.0'},
+    )
+    opener.open(req, timeout=15)
+    return opener
+
+def fetch_page(page, opener=None):
+    if opener is None:
+        opener = urllib.request.build_opener()
     url = f"{STRACKER_BASE}?page={page}"
     req = urllib.request.Request(
         url,
-        headers={'User-Agent': 'SimhausNotifier/1.0'},
+        headers={'User-Agent': 'Mozilla/5.0 SimhausNotifier/1.0'},
     )
-    with urllib.request.urlopen(req, timeout=15) as r:
+    with opener.open(req, timeout=15) as r:
         return r.read().decode('utf-8', errors='replace')
 
 import urllib.parse
@@ -122,14 +139,31 @@ def parse_laps(html):
     return laps
 
 def fetch_all_laps():
-    html0 = fetch_page(0)
-    html1 = fetch_page(1)
-    all_laps = parse_laps(html0) + parse_laps(html1)
+    """Fetch each car individually to bypass the session filter."""
     seen, unique = set(), []
-    for l in all_laps:
-        if l['lapid'] not in seen:
-            seen.add(l['lapid'])
-            unique.append(l)
+    
+    for car in ALL_CARS:
+        try:
+            url = f"{STRACKER_BASE}?page=0&cars={urllib.parse.quote(car)}&trackname=ks_laguna_seca&ranking=mulcarmuldrv"
+            req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 SimhausNotifier/1.0'})
+            with urllib.request.urlopen(req, timeout=15) as r:
+                html = r.read().decode('utf-8', errors='replace')
+            for l in parse_laps(html):
+                if l['lapid'] not in seen:
+                    seen.add(l['lapid'])
+                    unique.append(l)
+        except Exception as e:
+            print(f"Failed to fetch {car}: {e}")
+            continue
+    
+    # Sort by lap time and recalculate positions
+    unique.sort(key=lambda l: lap_to_ms(l['lap']))
+    if unique:
+        p1_ms = lap_to_ms(unique[0]['lap'])
+        for i, l in enumerate(unique):
+            l['pos'] = str(i + 1)
+            l['gap'] = '+00.000' if i == 0 else f"+{(lap_to_ms(l['lap'])-p1_ms)/1000:06.3f}"
+    
     return unique
 
 # ── Persistence ───────────────────────────────
