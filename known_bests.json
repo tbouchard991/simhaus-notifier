@@ -2,7 +2,7 @@
   "pb": {
     "GetboostedVR1:mrkryp_hgk_toyota_supra_tuerk_timeattack": "1:18.425",
     "Eladio:mrkryp_hgk_toyota_supra_tuerk_timeattack": "1:18.453",
-    "Driver 13:mrkryp_hgk_toyota_supra_tuerk_timeattack": "1:18.766",
+    "Driver 13:mrkryp_hgk_toyota_supra_tuerk_timeattack": "1:18.665",
     "Clarke:mrkryp_hgk_toyota_supra_tuerk_timeattack": "1:18.821",
     "Garfield:mrkryp_hgk_toyota_supra_tuerk_timeattack": "1:18.880",
     "Rossome.Sauce:mrkryp_hgk_toyota_supra_tuerk_timeattack": "1:19.167",
@@ -52,9 +52,9 @@
     "Eladio:pib_e36_TA": "1:16.607",
     "Bytor:pib_e36_TA": "1:15.585",
     "Clarke:pib_e36_TA": "1:17.036",
-    "Driver 13:pib_e36_TA": "1:17.272",
+    "Driver 13:pib_e36_TA": "1:16.830",
     "Sauce:pib_e36_TA": "1:17.428",
-    "Garfield:pib_e36_TA": "1:17.487",
+    "Garfield:pib_e36_TA": "1:16.738",
     "Kyle Loader:pib_e36_TA": "1:17.693",
     "iAmTheLIQUOR:pib_e36_TA": "1:19.019",
     "m4stersplint3r:pib_e36_TA": "1:19.115",
@@ -155,6 +155,10 @@
     "Driver 13:Hugie:pib_e36_TA": "2026-05-12",
     "Hugie:Garfield:pib_e36_TA": "2026-05-12",
     "Bytor:Driver 13:mrkryp_hgk_toyota_supra_tuerk_timeattack": "2026-05-12",
-    "zimmer\u2074\u2074:GetboostedVR1:corvette_z06_track": "2026-05-12"
+    "zimmer\u2074\u2074:GetboostedVR1:corvette_z06_track": "2026-05-12",
+    "Eladio:Garfield:pib_e36_TA": "2026-05-12",
+    "Garfield:Driver 13:pib_e36_TA": "2026-05-12",
+    "Driver 13:Bytor:mrkryp_hgk_toyota_supra_tuerk_timeattack": "2026-05-12",
+    "Bytor:Clarke:mrkryp_hgk_toyota_supra_tuerk_timeattack": "2026-05-12"
   }
 }
