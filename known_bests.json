@@ -1,0 +1,116 @@
+{
+  "pb": {
+    "GetboostedVR1:mrkryp_hgk_toyota_supra_tuerk_timeattack": "1:18.425",
+    "Eladio:mrkryp_hgk_toyota_supra_tuerk_timeattack": "1:18.453",
+    "Driver 13:mrkryp_hgk_toyota_supra_tuerk_timeattack": "1:18.766",
+    "Clarke:mrkryp_hgk_toyota_supra_tuerk_timeattack": "1:18.821",
+    "Garfield:mrkryp_hgk_toyota_supra_tuerk_timeattack": "1:18.880",
+    "Rossome.Sauce:mrkryp_hgk_toyota_supra_tuerk_timeattack": "1:19.167",
+    "Sauce:mrkryp_hgk_toyota_supra_tuerk_timeattack": "1:19.460",
+    "Bytor:mrkryp_hgk_toyota_supra_tuerk_timeattack": "1:19.719",
+    "m4stersplint3r:mrkryp_hgk_toyota_supra_tuerk_timeattack": "1:20.198",
+    "Garfield:s2000_2003_time_attack": "1:21.287",
+    "Bytor:s2000_2003_time_attack": "1:21.324",
+    "Eladio:s2000_2003_time_attack": "1:21.497",
+    "atlinke39:mrkryp_hgk_toyota_supra_tuerk_timeattack": "1:21.621",
+    "iAmTheLIQUOR:mrkryp_hgk_toyota_supra_tuerk_timeattack": "1:21.903",
+    "Driver 13:s2000_2003_time_attack": "1:22.130",
+    "Kyle Loader:s2000_2003_time_attack": "1:24.018",
+    "Bautista Bordes:corvette_z06_track": "1:24.675",
+    "GetboostedVR1:corvette_z06_track": "1:24.741",
+    "m4stersplint3r:s2000_2003_time_attack": "1:24.863",
+    "Garfield:corvette_z06_track": "1:25.563",
+    "Don Utz:s2000_2003_time_attack": "1:25.640",
+    "GTendy444:s2000_2003_time_attack": "1:25.736",
+    "GTendy444:corvette_z06_track": "1:26.880",
+    "bavarian_boii:toy_supra98_track": "1:26.941",
+    "m4stersplint3r:s281_2000_track": "1:27.224",
+    "Garfield:s281_2000_track": "1:27.568",
+    "iAmTheLIQUOR:corvette_z06_track": "1:29.329",
+    "Garfield:rbms_rx7_20b": "1:29.524",
+    "Bytor:rbms_rx7_20b": "1:29.618",
+    "GetboostedVR1:project9_nissan_gtr_mcr_r34": "1:30.019",
+    "Garfield:project9_nissan_gtr_mcr_r34": "1:31.496",
+    "bavarian_boii:project9_nissan_380rs_sundome": "1:31.555",
+    "atlinke39:s281_2000_track": "1:31.629",
+    "GetboostedVR1:996_2001_track": "1:31.739",
+    "Synth:corvette_z06_track": "1:31.843",
+    "Sauce:mh_bmw_m3_e46_s2": "1:31.889",
+    "Garfield:s7r_s2000_r1": "1:32.120",
+    "Garfield:996_2001_track": "1:32.685",
+    "GTendy444:project9_nissan_380rs_sundome": "1:33.064",
+    "GTendy444:project9_nissan_gtr_mcr_r34": "1:33.138",
+    "Garfield:mh_bmw_m3_e46_s2": "1:33.534",
+    "Bytor:s7r_s2000_r1": "1:33.672",
+    "Garfield:bkr_toyota_gr86_timeattack": "1:34.634",
+    "PapaTweaks:rbms_rx7_20b": "1:40.323",
+    "Synth:996_2001_track": "1:40.941",
+    "Enzyme:s7r_s2000_r1": "1:41.933",
+    "Enzyme:996_2001_track": "1:42.322",
+    "Synth:bkr_toyota_gr86_timeattack": "1:42.966"
+  },
+  "overall_p1": {
+    "driver": "GetboostedVR1",
+    "lap": "1:18.425"
+  },
+  "class_leaders": {
+    "mrkryp_hgk_toyota_supra_tuerk_timeattack": {
+      "driver": "GetboostedVR1",
+      "lap": "1:18.425"
+    },
+    "s2000_2003_time_attack": {
+      "driver": "Garfield",
+      "lap": "1:21.287"
+    },
+    "corvette_z06_track": {
+      "driver": "Bautista Bordes",
+      "lap": "1:24.675"
+    },
+    "toy_supra98_track": {
+      "driver": "bavarian_boii",
+      "lap": "1:26.941"
+    },
+    "s281_2000_track": {
+      "driver": "m4stersplint3r",
+      "lap": "1:27.224"
+    },
+    "rbms_rx7_20b": {
+      "driver": "Garfield",
+      "lap": "1:29.524"
+    },
+    "project9_nissan_gtr_mcr_r34": {
+      "driver": "GetboostedVR1",
+      "lap": "1:30.019"
+    },
+    "project9_nissan_380rs_sundome": {
+      "driver": "bavarian_boii",
+      "lap": "1:31.555"
+    },
+    "996_2001_track": {
+      "driver": "GetboostedVR1",
+      "lap": "1:31.739"
+    },
+    "mh_bmw_m3_e46_s2": {
+      "driver": "Sauce",
+      "lap": "1:31.889"
+    },
+    "s7r_s2000_r1": {
+      "driver": "Garfield",
+      "lap": "1:32.120"
+    },
+    "bkr_toyota_gr86_timeattack": {
+      "driver": "Garfield",
+      "lap": "1:34.634"
+    }
+  },
+  "rivals_posted": {
+    "GetboostedVR1:Eladio:mrkryp_hgk_toyota_supra_tuerk_timeattack": "2026-05-12",
+    "Driver 13:Clarke:mrkryp_hgk_toyota_supra_tuerk_timeattack": "2026-05-12",
+    "Clarke:Garfield:mrkryp_hgk_toyota_supra_tuerk_timeattack": "2026-05-12",
+    "Garfield:Bytor:s2000_2003_time_attack": "2026-05-12",
+    "Bytor:Eladio:s2000_2003_time_attack": "2026-05-12",
+    "Bautista Bordes:GetboostedVR1:corvette_z06_track": "2026-05-12",
+    "Don Utz:GTendy444:s2000_2003_time_attack": "2026-05-12",
+    "Garfield:Bytor:rbms_rx7_20b": "2026-05-12"
+  }
+}
