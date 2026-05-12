@@ -10,7 +10,7 @@
     "Bytor:mrkryp_hgk_toyota_supra_tuerk_timeattack": "1:19.719",
     "m4stersplint3r:mrkryp_hgk_toyota_supra_tuerk_timeattack": "1:20.198",
     "Garfield:s2000_2003_time_attack": "1:21.287",
-    "Bytor:s2000_2003_time_attack": "1:21.267",
+    "Bytor:s2000_2003_time_attack": "1:20.849",
     "Eladio:s2000_2003_time_attack": "1:21.497",
     "atlinke39:mrkryp_hgk_toyota_supra_tuerk_timeattack": "1:21.621",
     "iAmTheLIQUOR:mrkryp_hgk_toyota_supra_tuerk_timeattack": "1:21.903",
@@ -78,7 +78,7 @@
     },
     "s2000_2003_time_attack": {
       "driver": "Bytor",
-      "lap": "1:21.267"
+      "lap": "1:20.849"
     },
     "corvette_z06_track": {
       "driver": "Bautista Bordes",
