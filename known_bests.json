@@ -66,7 +66,7 @@
     "bavarian_boii:rbms_rx7_20b": "3:03.308",
     "matthew.87.e30:s2000_2003_time_attack": "3:32.486",
     "iAmTheLIQUOR:rbms_rx7_20b": "4:01.489",
-    "zimmer\u2074\u2074:pib_e36_TA": "1:15.175",
+    "zimmer\u2074\u2074:pib_e36_TA": "1:15.162",
     "Hugie:pib_e36_TA": "1:17.428",
     "Hugie:mrkryp_hgk_toyota_supra_tuerk_timeattack": "1:19.460",
     "zimmer\u2074\u2074:corvette_z06_track": "1:24.675",
@@ -78,7 +78,7 @@
   },
   "overall_p1": {
     "driver": "zimmer\u2074\u2074",
-    "lap": "1:15.175"
+    "lap": "1:15.162"
   },
   "class_leaders": {
     "mrkryp_hgk_toyota_supra_tuerk_timeattack": {
@@ -131,7 +131,7 @@
     },
     "pib_e36_TA": {
       "driver": "zimmer\u2074\u2074",
-      "lap": "1:15.175"
+      "lap": "1:15.162"
     },
     "honda_spoon_fit_gd3_nofsb_sundaecup": {
       "driver": "Eladio",
@@ -139,30 +139,30 @@
     }
   },
   "rivals_posted": {
-    "GetboostedVR1:Eladio:mrkryp_hgk_toyota_supra_tuerk_timeattack": "2026-05-12",
+    "GetboostedVR1:Eladio:mrkryp_hgk_toyota_supra_tuerk_timeattack": "2026-05-13",
     "Driver 13:Clarke:mrkryp_hgk_toyota_supra_tuerk_timeattack": "2026-05-12",
-    "Clarke:Garfield:mrkryp_hgk_toyota_supra_tuerk_timeattack": "2026-05-12",
+    "Clarke:Garfield:mrkryp_hgk_toyota_supra_tuerk_timeattack": "2026-05-13",
     "Garfield:Bytor:s2000_2003_time_attack": "2026-05-12",
     "Bytor:Eladio:s2000_2003_time_attack": "2026-05-12",
     "Bautista Bordes:GetboostedVR1:corvette_z06_track": "2026-05-12",
-    "Don Utz:GTendy444:s2000_2003_time_attack": "2026-05-12",
-    "Garfield:Bytor:rbms_rx7_20b": "2026-05-12",
+    "Don Utz:GTendy444:s2000_2003_time_attack": "2026-05-13",
+    "Garfield:Bytor:rbms_rx7_20b": "2026-05-13",
     "Bytor:Clarke:pib_e36_TA": "2026-05-12",
     "Clarke:Driver 13:pib_e36_TA": "2026-05-12",
     "Driver 13:Sauce:pib_e36_TA": "2026-05-12",
     "Sauce:Garfield:pib_e36_TA": "2026-05-12",
-    "iAmTheLIQUOR:m4stersplint3r:pib_e36_TA": "2026-05-12",
+    "iAmTheLIQUOR:m4stersplint3r:pib_e36_TA": "2026-05-13",
     "Bytor:Garfield:s2000_2003_time_attack": "2026-05-12",
     "Driver 13:Hugie:pib_e36_TA": "2026-05-12",
     "Hugie:Garfield:pib_e36_TA": "2026-05-12",
     "Bytor:Driver 13:mrkryp_hgk_toyota_supra_tuerk_timeattack": "2026-05-12",
-    "zimmer\u2074\u2074:GetboostedVR1:corvette_z06_track": "2026-05-12",
-    "Eladio:Garfield:pib_e36_TA": "2026-05-12",
-    "Garfield:Driver 13:pib_e36_TA": "2026-05-12",
-    "Driver 13:Bytor:mrkryp_hgk_toyota_supra_tuerk_timeattack": "2026-05-12",
-    "Bytor:Clarke:mrkryp_hgk_toyota_supra_tuerk_timeattack": "2026-05-12"
+    "zimmer\u2074\u2074:GetboostedVR1:corvette_z06_track": "2026-05-13",
+    "Eladio:Garfield:pib_e36_TA": "2026-05-13",
+    "Garfield:Driver 13:pib_e36_TA": "2026-05-13",
+    "Driver 13:Bytor:mrkryp_hgk_toyota_supra_tuerk_timeattack": "2026-05-13",
+    "Bytor:Clarke:mrkryp_hgk_toyota_supra_tuerk_timeattack": "2026-05-13"
   },
   "pb_posted_at": {},
-  "last_activity": "2026-05-12 16:05",
-  "session_summary_posted": "2026-05-12T23:40:58.605140+00:00"
+  "last_activity": "2026-05-12 18:27",
+  "session_summary_posted": "2026-05-13T01:30:59.272467+00:00"
 }
