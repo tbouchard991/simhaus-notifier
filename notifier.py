@@ -332,6 +332,8 @@ def check_class_leaders(laps, bests):
 def check_rivals(laps, bests):
     posted = bests.setdefault('rivals_posted', {})
     today  = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+    new_battles = []
+
     for i in range(len(laps) - 1):
         a, b = laps[i], laps[i+1]
         if a['car'] != b['car']: continue
@@ -340,19 +342,26 @@ def check_rivals(laps, bests):
         key = f"{a['driver']}:{b['driver']}:{a['car']}"
         if posted.get(key) == today: continue
         posted[key] = today
-        post_discord({
-            'title': f"⚔️ Close Battle — {car_label(a['car'])}",
-            'description': f"**{b['driver']}** is only **{gap_ms/1000:.3f}s** behind **{a['driver']}**!",
-            'color': 0xff6b00,
-            'fields': [
-                {'name': f"🥇 {a['driver']}", 'value': f"`{a['lap']}`",        'inline': True},
-                {'name': f"🥈 {b['driver']}", 'value': f"`{b['lap']}`",        'inline': True},
-                {'name': '📏 Gap',            'value': fmt_gap(gap_ms),        'inline': True},
-            ],
-            'footer': {'text': 'Simhaus Time Attack · Laguna Seca'},
-            'timestamp': ts(),
-        })
-        print(f"Rival: {b['driver']} vs {a['driver']}")
+        new_battles.append((a, b, gap_ms))
+
+    if not new_battles: return
+
+    # Build single combined embed
+    lines = '\n\n'.join(
+        f"**{car_label(a['car'])}**\n{a['driver']} `{a['lap']}` vs {b['driver']} `{b['lap']}` · **{gap_ms/1000:.3f}s**"
+        for a, b, gap_ms in new_battles
+    )
+
+    title = f"⚔️ Close Battle{'s' if len(new_battles)>1 else ''} — {len(new_battles)} pair{'s' if len(new_battles)>1 else ''} within {RIVAL_GAP_MS/1000:.1f}s"
+
+    post_discord({
+        'title': title,
+        'description': lines,
+        'color': 0xff6b00,
+        'footer': {'text': 'Simhaus Time Attack · Laguna Seca'},
+        'timestamp': ts(),
+    })
+    print(f"Rivals: {len(new_battles)} close battle(s) posted")
 
 # ── 5. Session Summary ────────────────────────
 def check_session_summary(laps, bests, session_pbs=None):
