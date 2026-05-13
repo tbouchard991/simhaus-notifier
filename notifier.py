@@ -204,7 +204,7 @@ def post_discord(embed):
 def ts(): return datetime.now(timezone.utc).isoformat()
 
 # ── 1. Personal Bests ─────────────────────────
-def check_pbs(laps, bests):
+def check_pbs(laps, bests, session_pbs=None):
     pb         = bests.setdefault('pb', {})
     posted_at  = bests.setdefault('pb_posted_at', {})
     now        = datetime.now(timezone.utc)
@@ -241,6 +241,8 @@ def check_pbs(laps, bests):
         pb[key] = cur
         posted_at[key] = now.isoformat()
         new_pbs.append((l, improvement_ms))
+        if session_pbs is not None:
+            session_pbs.append((l['driver'], l['car'], improvement_ms))
 
     for l, improvement_ms in new_pbs:
         if l['pos'] == '1': continue
@@ -353,42 +355,33 @@ def check_rivals(laps, bests):
         print(f"Rival: {b['driver']} vs {a['driver']}")
 
 # ── 5. Session Summary ────────────────────────
-def check_session_summary(laps, bests):
+def check_session_summary(laps, bests, session_pbs=None):
     """Post a session summary when the server has been idle for SESSION_IDLE_MINS."""
     if not laps: return
 
-    # Find the most recent lap date in the current data
     dates = [l['date'] for l in laps if l.get('date')]
     if not dates: return
 
-    # Parse the most recent lap date
     try:
         latest_date_str = max(dates)
-        # sTracker dates are like "2026-05-11 13:47"
         latest_dt = datetime.strptime(latest_date_str, '%Y-%m-%d %H:%M').replace(tzinfo=timezone.utc)
     except Exception:
         return
 
-    now = datetime.now(timezone.utc)
+    now       = datetime.now(timezone.utc)
     idle_mins = (now - latest_dt).total_seconds() / 60
 
-    # Update last known activity
-    prev_activity = bests.get('last_activity')
     bests['last_activity'] = latest_date_str
 
-    # Only post if:
-    # 1. Server has been idle for SESSION_IDLE_MINS
-    # 2. We haven't already posted a summary today
     last_summary = bests.get('session_summary_posted')
-    today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+    today        = now.strftime('%Y-%m-%d')
 
     if idle_mins < SESSION_IDLE_MINS:
         return
-
     if last_summary and last_summary[:10] == today:
-        return  # Already posted a summary today
+        return
 
-    # Build summary
+    # ── Build stats ───────────────────────────
     by_car = {}
     for l in laps:
         if l['car'] not in by_car:
@@ -398,6 +391,14 @@ def check_session_summary(laps, bests):
     total_laps = sum(int(l['laps']) for l in laps if str(l['laps']).isdigit())
     drivers    = len(set(l['driver'] for l in laps))
 
+    # Leaderboard snapshot — top 3 overall
+    medals = ['🥇', '🥈', '🥉']
+    podium = '\n'.join(
+        f"{medals[i]} **{laps[i]['driver']}** `{laps[i]['lap']}` — {car_label(laps[i]['car'])}"
+        for i in range(min(3, len(laps)))
+    )
+
+    # Class leaders
     class_lines = '\n'.join(
         f"**{car_label(car_id)}** — {e['driver']} `{e['lap']}`"
         for car_id, e in by_car.items()
@@ -410,22 +411,63 @@ def check_session_summary(laps, bests):
         driver_laps[l['driver']] = driver_laps.get(l['driver'], 0) + n
     most_active = max(driver_laps.items(), key=lambda x: x[1], default=('—', 0))
 
+    # New PBs set this session
+    pbs_count = len(session_pbs) if session_pbs else 0
+
+    # Biggest improvement this session
+    biggest = None
+    if session_pbs:
+        biggest = max(session_pbs, key=lambda x: x[2])
+
+    # Fun stat — total distance driven + average lap time
+    TRACK_KM = 3.602
+    total_km = total_laps * TRACK_KM
+
+    # Average best lap time across all drivers
+    valid_ms = [lap_to_ms(l['lap']) for l in laps if lap_to_ms(l['lap']) != float('inf')]
+    if valid_ms:
+        avg_ms   = sum(valid_ms) / len(valid_ms)
+        avg_mins = int(avg_ms // 60000)
+        avg_secs = (avg_ms % 60000) / 1000
+        avg_str  = f"{avg_mins}:{avg_secs:06.3f}"
+        fastest_ms = lap_to_ms(overall['lap'])
+        delta_ms   = avg_ms - fastest_ms
+        fun_stat = (
+            f"{total_laps} laps = **{total_km:.0f} km** ({total_km*0.621:.0f} miles) driven today\n"
+            f"Average best lap: **{avg_str}** — {delta_ms/1000:.3f}s off the overall fastest"
+        )
+    else:
+        fun_stat = f"{total_laps} laps = **{total_km:.0f} km** ({total_km*0.621:.0f} miles) driven today"
+
+    # Build fields
+    fields = [
+        {'name': '🏆 Top 3',          'value': podium or '—',       'inline': False},
+        {'name': '🏅 Class Leaders',   'value': class_lines or '—',  'inline': False},
+    ]
+
+    # PBs set + biggest improvement on same row
+    pb_val = f"{pbs_count} personal best{'s' if pbs_count!=1 else ''} broken"
+    if biggest:
+        pb_val += f"\nBiggest: **{biggest[0]}** ▲ {biggest[2]/1000:.3f}s in {car_label(biggest[1])}"
+    fields.append({'name': '📈 Improvements', 'value': pb_val, 'inline': False})
+
+    fields += [
+        {'name': '🔄 Most Active', 'value': f"**{most_active[0]}** — {most_active[1]} laps", 'inline': True},
+        {'name': '👥 Drivers',     'value': str(drivers),                                     'inline': True},
+        {'name': '🔢 Total Laps',  'value': str(total_laps),                                  'inline': True},
+        {'name': '🛣️ Fun Stat',    'value': fun_stat,                                         'inline': False},
+    ]
+
     post_discord({
         'title': '📋 Session Summary',
-        'description': f"The server has been quiet for {int(idle_mins)} minutes. Here's how the session wrapped up.",
+        'description': f"The server went quiet after **{latest_date_str}**. Here's how the session wrapped up.",
         'color': 0x1e90ff,
-        'fields': [
-            {'name': '🏆 Overall Fastest', 'value': f"**{overall['driver']}** `{overall['lap']}` — {car_label(overall['car'])}", 'inline': False},
-            {'name': '🏅 Class Leaders',   'value': class_lines or '—',                                                          'inline': False},
-            {'name': '🔄 Most Active',     'value': f"**{most_active[0]}** — {most_active[1]} laps",                             'inline': True},
-            {'name': '👥 Drivers',         'value': str(drivers),                                                                'inline': True},
-            {'name': '🔢 Total Laps',      'value': str(total_laps),                                                             'inline': True},
-        ],
+        'fields': fields,
         'footer': {'text': 'Simhaus Time Attack · Laguna Seca · simhaus-leaderboard-2a7e2b.gitlab.io'},
         'timestamp': ts(),
     })
     bests['session_summary_posted'] = now.isoformat()
-    print(f"Session summary posted (idle {int(idle_mins)} mins)")
+    print(f"Session summary posted (idle {int(idle_mins)} mins, {pbs_count} PBs)")
 
 # ── Main ──────────────────────────────────────
 def main():
@@ -445,11 +487,13 @@ def main():
     save_results(laps)
 
     bests = load_bests()
-    check_pbs(laps, bests)
+    # Track session stats for summary
+    session_pbs = []        # list of (driver, car, improvement_ms)
+    check_pbs(laps, bests, session_pbs)
     check_overall_p1(laps, bests)
     check_class_leaders(laps, bests)
     check_rivals(laps, bests)
-    check_session_summary(laps, bests)
+    check_session_summary(laps, bests, session_pbs)
     save_bests(bests)
     print("Done")
 
