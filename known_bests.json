@@ -49,7 +49,7 @@
     "Enzyme:996_2001_track": "1:42.322",
     "Synth:bkr_toyota_gr86_timeattack": "1:42.966",
     "Bautista Bordes:pib_e36_TA": "1:15.175",
-    "Eladio:pib_e36_TA": "1:16.607",
+    "Eladio:pib_e36_TA": "1:16.252",
     "Bytor:pib_e36_TA": "1:15.585",
     "Clarke:pib_e36_TA": "1:17.036",
     "Driver 13:pib_e36_TA": "1:16.830",
@@ -147,8 +147,8 @@
     "Garfield:Bytor:s2000_2003_time_attack": "2026-05-12",
     "Bytor:Eladio:s2000_2003_time_attack": "2026-05-12",
     "Bautista Bordes:GetboostedVR1:corvette_z06_track": "2026-05-12",
-    "Don Utz:GTendy444:s2000_2003_time_attack": "2026-05-14",
-    "Garfield:Bytor:rbms_rx7_20b": "2026-05-14",
+    "Don Utz:GTendy444:s2000_2003_time_attack": "2026-05-15",
+    "Garfield:Bytor:rbms_rx7_20b": "2026-05-15",
     "Bytor:Clarke:pib_e36_TA": "2026-05-12",
     "Clarke:Driver 13:pib_e36_TA": "2026-05-12",
     "Driver 13:Sauce:pib_e36_TA": "2026-05-12",
@@ -158,20 +158,21 @@
     "Driver 13:Hugie:pib_e36_TA": "2026-05-12",
     "Hugie:Garfield:pib_e36_TA": "2026-05-12",
     "Bytor:Driver 13:mrkryp_hgk_toyota_supra_tuerk_timeattack": "2026-05-12",
-    "zimmer\u2074\u2074:GetboostedVR1:corvette_z06_track": "2026-05-14",
+    "zimmer\u2074\u2074:GetboostedVR1:corvette_z06_track": "2026-05-15",
     "Eladio:Garfield:pib_e36_TA": "2026-05-14",
-    "Garfield:Driver 13:pib_e36_TA": "2026-05-14",
-    "Driver 13:Bytor:mrkryp_hgk_toyota_supra_tuerk_timeattack": "2026-05-14",
+    "Garfield:Driver 13:pib_e36_TA": "2026-05-15",
+    "Driver 13:Bytor:mrkryp_hgk_toyota_supra_tuerk_timeattack": "2026-05-15",
     "Bytor:Clarke:mrkryp_hgk_toyota_supra_tuerk_timeattack": "2026-05-13",
-    "GetboostedVR1:Clarke:mrkryp_hgk_toyota_supra_tuerk_timeattack": "2026-05-14",
-    "Clarke:Eladio:mrkryp_hgk_toyota_supra_tuerk_timeattack": "2026-05-14",
-    "Bytor:Garfield:mrkryp_hgk_toyota_supra_tuerk_timeattack": "2026-05-14"
+    "GetboostedVR1:Clarke:mrkryp_hgk_toyota_supra_tuerk_timeattack": "2026-05-15",
+    "Clarke:Eladio:mrkryp_hgk_toyota_supra_tuerk_timeattack": "2026-05-15",
+    "Bytor:Garfield:mrkryp_hgk_toyota_supra_tuerk_timeattack": "2026-05-15"
   },
   "pb_posted_at": {
     "Clarke:mrkryp_hgk_toyota_supra_tuerk_timeattack": "2026-05-13T15:29:14.167828+00:00",
     "m4stersplint3r:pib_e36_TA": "2026-05-14T05:08:38.714048+00:00",
-    "m4stersplint3r:corvette_z06_track": "2026-05-14T08:02:50.872280+00:00"
+    "m4stersplint3r:corvette_z06_track": "2026-05-14T08:02:50.872280+00:00",
+    "Eladio:pib_e36_TA": "2026-05-15T01:23:28.761129+00:00"
   },
-  "last_activity": "2026-05-13 22:16",
-  "session_summary_posted": "2026-05-14T01:28:43.525686+00:00"
+  "last_activity": "2026-05-14 16:43",
+  "session_summary_posted": "2026-05-15T01:23:35.216126+00:00"
 }
