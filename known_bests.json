@@ -1,7 +1,7 @@
 {
   "pb": {
     "Garfield:blckbox_f1600_mygale": "1:11.375",
-    "zimmer\u2074\u2074:legends_ford_34_coupe": "1:16.227"
+    "zimmer\u2074\u2074:legends_ford_34_coupe": "1:15.424"
   },
   "overall_p1": {
     "driver": "Garfield",
@@ -14,11 +14,13 @@
     },
     "legends_ford_34_coupe": {
       "driver": "zimmer\u2074\u2074",
-      "lap": "1:16.227"
+      "lap": "1:15.424"
     }
   },
   "rivals_posted": {},
-  "pb_posted_at": {},
-  "last_activity": "2026-05-15 20:52",
+  "pb_posted_at": {
+    "zimmer\u2074\u2074:legends_ford_34_coupe": "2026-05-16T06:12:00.598200+00:00"
+  },
+  "last_activity": "2026-05-15 20:53",
   "session_summary_posted": "2026-05-16T03:52:17.496603+00:00"
 }
