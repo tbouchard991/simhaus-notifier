@@ -2,7 +2,7 @@ name: Simhaus Discord Notifier
 
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '* * * * *'  # Every minute
   workflow_dispatch:
 
 jobs:
