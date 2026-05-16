@@ -266,7 +266,7 @@ def check_pbs(laps, bests, session_pbs=None):
                 {'name': '📊 Gap to P1',   'value': gap_display,                       'inline': True},
                 {'name': '🔄 Total Laps',  'value': str(l['laps']),                    'inline': True},
             ],
-            'footer': {'text': 'Simhaus Time Attack · Laguna Seca'},
+            'footer': {'text': 'Simhaus Time Attack · NJMP Lightning'},
             'timestamp': ts(),
         })
         print(f"PB: {l['driver']} {l['lap']} (▲{improvement_ms/1000:.3f}s) in {car_label(l['car'])}")
@@ -295,7 +295,7 @@ def check_overall_p1(laps, bests):
             {'name': '🚗 Car',        'value': car_label(p1['car']),               'inline': True},
             {'name': '📉 Prev Best',  'value': f"`{prev['lap']}`",                 'inline': True},
         ],
-        'footer': {'text': 'Simhaus Time Attack · Laguna Seca'},
+        'footer': {'text': 'Simhaus Time Attack · NJMP Lightning'},
         'timestamp': ts(),
     })
     print(f"P1: {p1['driver']} {p1['lap']}")
@@ -330,7 +330,7 @@ def check_class_leaders(laps, bests):
                 {'name': '📉 Prev Best', 'value': f"`{prev['lap']}`",              'inline': True},
                 {'name': '📈 Delta',     'value': f"▲ {improvement/1000:.3f}s",    'inline': True},
             ],
-            'footer': {'text': 'Simhaus Time Attack · Laguna Seca'},
+            'footer': {'text': 'Simhaus Time Attack · NJMP Lightning'},
             'timestamp': ts(),
         })
         print(f"Class leader: {fastest['driver']} in {car_label(car_id)}")
@@ -366,7 +366,7 @@ def check_rivals(laps, bests):
         'title': title,
         'description': lines,
         'color': 0xff6b00,
-        'footer': {'text': 'Simhaus Time Attack · Laguna Seca'},
+        'footer': {'text': 'Simhaus Time Attack · NJMP Lightning'},
         'timestamp': ts(),
     })
     print(f"Rivals: {len(new_battles)} close battle(s) posted")
@@ -480,7 +480,7 @@ def check_session_summary(laps, bests, session_pbs=None):
         'description': f"The server went quiet after **{latest_date_str}**. Here's how the session wrapped up.",
         'color': 0x1e90ff,
         'fields': fields,
-        'footer': {'text': 'Simhaus Time Attack · Laguna Seca · simhaus-leaderboard-2a7e2b.gitlab.io'},
+        'footer': {'text': 'Simhaus Time Attack · NJMP Lightning · simhaus-leaderboard-2a7e2b.gitlab.io'},
         'timestamp': ts(),
     })
     bests['session_summary_posted'] = now.isoformat()
