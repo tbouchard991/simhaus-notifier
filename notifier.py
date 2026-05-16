@@ -152,6 +152,10 @@ def fetch_all_laps():
                     unique.append(l)
         except Exception as e:
             print(f"Failed page {page}: {e}")
+    # Filter to only current event cars — discard any old event data
+    unique = [l for l in unique if l['car'] in set(ALL_CARS_PARAM.split(','))]
+    print(f"After car filter: {len(unique)} laps")
+    
     unique.sort(key=lambda l: lap_to_ms(l['lap']))
     if unique:
         p1_ms = lap_to_ms(unique[0]['lap'])
