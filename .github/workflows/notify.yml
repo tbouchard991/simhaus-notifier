@@ -1,12 +1,12 @@
-name: Simhaus Discord Notifier
+name: Simhaus Data Sync
 
 on:
   schedule:
-    - cron: '* * * * *'  # Every minute
+    - cron: '* * * * *'
   workflow_dispatch:
 
 jobs:
-  notify:
+  sync:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -20,9 +20,8 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Run notifier
+      - name: Fetch and save results
         env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
           STRACKER_SESSION: ${{ secrets.STRACKER_SESSION }}
         run: python notifier.py
 
