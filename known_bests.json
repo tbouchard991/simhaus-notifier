@@ -80,11 +80,12 @@
     "m4stersplint3r:project9_nissan_gtr_mcr_r34": "1:30.467",
     "m4stersplint3r:rbms_rx7_20b": "1:30.196",
     "m4stersplint3r:toy_supra98_track": "1:28.354",
-    "m4stersplint3r:996_2001_track": "1:33.727"
+    "m4stersplint3r:996_2001_track": "1:33.727",
+    "Garfield:blckbox_f1600_mygale": "1:11.375"
   },
   "overall_p1": {
-    "driver": "zimmer\u2074\u2074",
-    "lap": "1:15.162"
+    "driver": "Garfield",
+    "lap": "1:11.375"
   },
   "class_leaders": {
     "mrkryp_hgk_toyota_supra_tuerk_timeattack": {
@@ -142,6 +143,10 @@
     "honda_spoon_fit_gd3_nofsb_sundaecup": {
       "driver": "Eladio",
       "lap": "1:54.592"
+    },
+    "blckbox_f1600_mygale": {
+      "driver": "Garfield",
+      "lap": "1:11.375"
     }
   },
   "rivals_posted": {
@@ -178,6 +183,6 @@
     "Eladio:pib_e36_TA": "2026-05-15T01:23:28.761129+00:00",
     "iAmTheLIQUOR:pib_e36_TA": "2026-05-15T05:04:12.548142+00:00"
   },
-  "last_activity": "2026-05-15 05:52",
+  "last_activity": "2026-05-15 20:15",
   "session_summary_posted": "2026-05-16T03:22:33.893352+00:00"
 }
