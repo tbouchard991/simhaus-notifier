@@ -19,15 +19,16 @@ PB_COOLDOWN_MINS   = 10     # minutes between PB posts per driver
 SESSION_IDLE_MINS  = 120    # minutes of inactivity before session summary
 
 ALL_CARS_PARAM = ','.join([
-    '996_2001_track','bkr_toyota_gr86_timeattack','bmw_m3_e92_team_schirmer_by_freeman',
-    'corvette_z06_track','mh_bmw_m3_e46_s2','mrkryp_hgk_toyota_supra_tuerk_timeattack',
-    'pib_e36_TA','pib_e36_ta','project9_nissan_380rs_sundome','project9_nissan_gtr_mcr_r34',
-    'rbms_honda_nsx_advance_na2','rbms_rx7_20b','s2000_2003_time_attack','s281_2000_track',
-    's7r_s2000_r1','toy_supra98_track','tw_bmw_m4_lenz','honda_spoon_fit_gd3',
-    'honda_spoon_fit_gd3_nofsb_sundaecup',
+    'blckbox_f1600_mygale',
+    'bmw_e36_compact',
+    'legends_ford_34_coupe',
 ])
 
 CAR_LABELS = {
+    'blckbox_f1600_mygale':    'Formula 1600 Mygale',
+    'bmw_e36_compact':         'BMW E36 Compact',
+    'legends_ford_34_coupe':   'Legends Ford \'34 Coupe',
+    # previous event cars kept for reference
     'pib_e36_TA':                               'PIB BMW E36 TA',
     'mrkryp_hgk_toyota_supra_tuerk_timeattack': 'HGK Toyota Supra',
     's2000_2003_time_attack':                   'Honda S2000 TA',
@@ -89,7 +90,7 @@ def fmt_gap_to_p1(gap_str):
 
 # ── Fetch sTracker ────────────────────────────
 def fetch_page(page):
-    url = (f"{STRACKER_BASE}?track=ks_laguna_seca"
+    url = (f"{STRACKER_BASE}?track=njmp_lightning"
            f"&cars={ALL_CARS_PARAM}"
            f"&valid=1,2,0&date_from=&date_to=&page={page}")
     headers = {
@@ -98,9 +99,16 @@ def fetch_page(page):
     }
     if STRACKER_SESSION:
         headers['Cookie'] = f'session_id={STRACKER_SESSION}'
+        print(f"Using session: {STRACKER_SESSION[:8]}...")
+    else:
+        print("WARNING: No session cookie set")
     req = urllib.request.Request(url, headers=headers)
     with urllib.request.urlopen(req, timeout=15) as r:
-        return r.read().decode('utf-8', errors='replace')
+        html = r.read().decode('utf-8', errors='replace')
+        # Check if E36 is in the response
+        e36_count = html.count('pib_e36')
+        print(f"Page {page}: {len(html)} chars, E36 entries: {e36_count}")
+        return html
 
 def parse_laps(html):
     laps = []
