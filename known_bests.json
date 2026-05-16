@@ -82,7 +82,7 @@
     "m4stersplint3r:toy_supra98_track": "1:28.354",
     "m4stersplint3r:996_2001_track": "1:33.727",
     "Garfield:blckbox_f1600_mygale": "1:11.375",
-    "zimmer\u2074\u2074:legends_ford_34_coupe": "1:49.554"
+    "zimmer\u2074\u2074:legends_ford_34_coupe": "1:18.278"
   },
   "overall_p1": {
     "driver": "Garfield",
@@ -151,7 +151,7 @@
     },
     "legends_ford_34_coupe": {
       "driver": "zimmer\u2074\u2074",
-      "lap": "1:49.554"
+      "lap": "1:18.278"
     }
   },
   "rivals_posted": {
@@ -186,8 +186,9 @@
     "m4stersplint3r:pib_e36_TA": "2026-05-14T05:08:38.714048+00:00",
     "m4stersplint3r:corvette_z06_track": "2026-05-14T08:02:50.872280+00:00",
     "Eladio:pib_e36_TA": "2026-05-15T01:23:28.761129+00:00",
-    "iAmTheLIQUOR:pib_e36_TA": "2026-05-15T05:04:12.548142+00:00"
+    "iAmTheLIQUOR:pib_e36_TA": "2026-05-15T05:04:12.548142+00:00",
+    "zimmer\u2074\u2074:legends_ford_34_coupe": "2026-05-16T03:48:54.652979+00:00"
   },
-  "last_activity": "2026-05-15 20:44",
+  "last_activity": "2026-05-15 20:48",
   "session_summary_posted": "2026-05-16T03:22:33.893352+00:00"
 }
