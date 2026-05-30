@@ -8,7 +8,7 @@ import json, os, re, urllib.request, urllib.error
 from datetime import datetime, timezone
 
 STRACKER_BASE    = 'https://usa2.assettohosting.com:50640/stracker/lapstat'
-STRACKER_SESSION = os.environ.get('STRACKER_SESSION', '')
+STRACKER_SESSION = os.environ.get('STRACKER_SESSION', 'fb65464a4e5f7132bb703ac5ccffd1c405796f38')
 RESULTS_FILE     = 'results.json'
 
 TRACK      = 'njmp_lightning'
