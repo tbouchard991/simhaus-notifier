@@ -8,7 +8,7 @@ import json, os, re, urllib.request, urllib.error
 from datetime import datetime, timezone
 
 STRACKER_BASE    = 'https://usa2.assettohosting.com:50640/stracker/lapstat'
-STRACKER_SESSION = os.environ.get('STRACKER_SESSION', 'fb65464a4e5f7132bb703ac5ccffd1c405796f38')
+STRACKER_SESSION = os.environ.get('STRACKER_SESSION', '130cea85dd3f5abe8007d7ba4a10d3ae762ffec6')
 RESULTS_FILE     = 'results.json'
 
 TRACK      = 'ek_akina-downhill_real'
@@ -34,11 +34,15 @@ def fetch_page(page):
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
     if STRACKER_SESSION:
         headers['Cookie'] = f'session_id={STRACKER_SESSION}'
-        print(f"Using session: {STRACKER_SESSION[:8]}...")
+        print(f"Session: {STRACKER_SESSION[:8]}...")
+    print(f"Fetching: {url[:100]}")
     req = urllib.request.Request(url, headers=headers)
     with urllib.request.urlopen(req, timeout=15) as r:
         html = r.read().decode('utf-8', errors='replace')
-    print(f"Page {page}: {len(html)} chars")
+    # Debug: show what track and cars appear in response
+    import re as re2
+    cars_found = set(re2.findall(r'(alfa_romeo_giulietta|ae86|crx_moero|lotus_elise|civic_eg6_tuned|blckbox_f1600|bmw_e36_compact|legends_ford|njmp|laguna)', html))
+    print(f"Page {page}: {len(html)} chars, found: {cars_found}")
     return html
 
 def parse_laps(html):
