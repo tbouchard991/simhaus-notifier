@@ -1,29 +1,9 @@
 {
-  "pb": {
-    "Garfield:blckbox_f1600_mygale": "1:11.375",
-    "zimmer\u2074\u2074:legends_ford_34_coupe": "1:15.424",
-    "Garfield:legends_ford_34_coupe": "1:15.542"
-  },
-  "overall_p1": {
-    "driver": "Garfield",
-    "lap": "1:11.375"
-  },
-  "class_leaders": {
-    "blckbox_f1600_mygale": {
-      "driver": "Garfield",
-      "lap": "1:11.375"
-    },
-    "legends_ford_34_coupe": {
-      "driver": "zimmer\u2074\u2074",
-      "lap": "1:15.424"
-    }
-  },
-  "rivals_posted": {
-    "zimmer\u2074\u2074:Garfield:legends_ford_34_coupe": "2026-05-16"
-  },
-  "pb_posted_at": {
-    "zimmer\u2074\u2074:legends_ford_34_coupe": "2026-05-16T06:12:00.598200+00:00"
-  },
-  "last_activity": "2026-05-16 09:07",
-  "session_summary_posted": "2026-05-16T03:52:17.496603+00:00"
+  "pb": {},
+  "overall_p1": {},
+  "class_leaders": {},
+  "rivals_posted": {},
+  "pb_posted_at": {},
+  "last_activity": null,
+  "session_summary_posted": null
 }
