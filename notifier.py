@@ -30,7 +30,7 @@ def lap_to_ms(t):
     return float(parts[0])*60000 + float(parts[1])*1000 if len(parts)==2 else float(parts[0])*1000
 
 def fetch_page(page):
-    url = f"{STRACKER_BASE}?track={TRACK}&cars={EVENT_CARS}&valid=1,2,0&date_from=&date_to=&page={page}"
+    url = f"{STRACKER_BASE}?track={TRACK}&cars={EVENT_CARS}&valid=1,2&date_from=&date_to=&page={page}"
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
     if STRACKER_SESSION:
         headers['Cookie'] = f'session_id={STRACKER_SESSION}'
