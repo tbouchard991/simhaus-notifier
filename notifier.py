@@ -11,8 +11,8 @@ STRACKER_BASE    = 'https://usa2.assettohosting.com:50640/stracker/lapstat'
 STRACKER_SESSION = os.environ.get('STRACKER_SESSION', 'fb65464a4e5f7132bb703ac5ccffd1c405796f38')
 RESULTS_FILE     = 'results.json'
 
-TRACK      = 'njmp_lightning'
-EVENT_CARS = 'blckbox_f1600_mygale,bmw_e36_compact,legends_ford_34_coupe'
+TRACK      = 'ek_akina-downhill_real'
+EVENT_CARS = 'alfa_romeo_giulietta_spider,dngs_toyota_ae86_levin_coupe_v1.2,rbms_honda_crx_moero,rbms_lotus_elise_moero,rj_honda_civic_eg6_tuned'
 
 DRIVER_NAMES = {
     'Bautista Bordes': 'zimmer\u2074\u2074',
