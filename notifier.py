@@ -101,7 +101,10 @@ def main():
     except Exception as e:
         print(f"Failed: {e}"); return
     if not laps:
-        print("No laps"); return
+        print("No laps yet — saving empty results")
+        with open(RESULTS_FILE, 'w') as f:
+            json.dump({'ok': True, 'updated': datetime.now(timezone.utc).isoformat(), 'count': 0, 'laps': []}, f)
+        return
     with open(RESULTS_FILE, 'w') as f:
         json.dump({'ok': True, 'updated': datetime.now(timezone.utc).isoformat(), 'count': len(laps), 'laps': laps}, f)
     print(f"Saved {len(laps)} laps. Done")
